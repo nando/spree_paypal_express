@@ -320,7 +320,7 @@ module Spree
       if stage == "checkout"
         opts[:handling] = 0
 
-        opts[:callback_url] = spree_root_url + "paypal_express_callbacks/#{order.number}"
+        opts[:callback_url] = root_url + "paypal_express_callbacks/#{order.number}"
         opts[:callback_timeout] = 3
       elsif stage == "payment"
         #hack to add float rounding difference in as handling fee - prevents PayPal from rejecting orders
@@ -349,11 +349,11 @@ module Spree
         shipping_method = ShippingMethod.all.first
         shipping_default = [{ :default => true, 
                               :name => shipping_method.name, 
-                              :amount => ((shipping_method.calculator.compute(self).to_f) * 100).to_i }]
+                              :amount => ((shipping_method.calculator.compute(@order).to_f) * 100).to_i }]
       end
 
       {
-        :callback_url      => spree_root_url + "paypal_shipping_update",
+        :callback_url      => root_url + "paypal_shipping_update",
         :callback_timeout  => 6,
         :callback_version  => '61.0',
         :shipping_options  => shipping_default
